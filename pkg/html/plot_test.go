@@ -2,7 +2,6 @@ package html
 
 import "testing"
 
-func TestGen(t *testing.T) {
-	gen()
-	t.Log("hello world")
+func Test_gen(t *testing.T) {
+	Gen()
 }
