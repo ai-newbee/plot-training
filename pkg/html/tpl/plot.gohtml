@@ -2,16 +2,68 @@
 <html>
 <head>
     <title>plot</title>
-    <script src="https://cdn.plot.ly/plotly-2.5.0.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/plotly.js/2.3.1/plotly-basic.min.js"></script>
 </head>
 <body>
-<div id="gd"></div>
+<div id="myDiv"></div>
 
 <script>
-    Plotly.newPlot("gd", /* JSON object */ {
-        "data": [{ "y": [1, 2, 3] }],
-        "layout": { "width": 600, "height": 400}
-    })
+    var x = {{.X}};
+    var y = {{.Y}};
+    var marker = {
+        name: 'samples',
+        x: x,
+        y: y,
+        mode: 'markers',
+        marker: {color: 'yellow'}
+    }
+
+    var trace = {
+        name: 'fitting-line',
+        type: "scatter",
+        mode: "lines",
+        x: [.0,1.1],
+        y: [0, 0],
+        line: {color: 'red'}
+    };
+
+    var data = [trace,marker];
+
+    Plotly.newPlot('myDiv', data, {
+        xaxis: {range: [0, 1.2]},
+        yaxis: {range: [0, 1.2]}
+    });
+
+    function animation() {
+        Plotly.animate('myDiv', {
+            data: [trace],
+            traces: [0],
+            layout: {}
+        }, {
+            transition: {
+                duration: 500,
+                easing: 'cubic-in-out'
+            },
+            frame: {
+                duration: 500
+            }
+        })
+    }
+
+    const  interval = 200
+    var  latch = 50
+    var offset= 0.1
+    const repeat = function (){
+         latch--
+         //console.log(latch)
+         if (latch >0 ){
+             trace.y = [0, trace.y[1]+ offset]
+             animation()
+             setTimeout(repeat,interval)
+         }
+     }
+
+    setTimeout(repeat,0)
 </script>
 </body>
 </html>

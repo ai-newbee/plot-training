@@ -2,9 +2,9 @@ package main
 
 import (
 	"dl-base/pkg/html"
+	"dl-base/pkg/sample"
 )
 
 func main() {
-	//sample.Random(2)
-	html.Gen()
+	html.Render(sample.Random(500))
 }

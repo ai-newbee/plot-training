@@ -3,23 +3,23 @@ package html
 import (
 	"bufio"
 	"dl-base/pkg/config"
-	"fmt"
+	"dl-base/pkg/sample"
 	"html/template"
 	"log"
 	"os"
 )
 
-func Gen() {
+func Render(samples sample.XY) {
 	pwd, err := os.Getwd()
 	log.Printf("pwd:%v", pwd)
 
-	tpl := template.Must(template.ParseGlob("tpl/*.gohtml"))
-	filePath := "../../" + config.StaticFolderName + "/plot.html"
+	tpl := template.Must(template.ParseGlob(config.PojectRoot + "/pkg/html/tpl/*.gohtml"))
+	filePath := config.PojectRoot + "/" + config.StaticFolderName + "/plot.html"
 	f, err := os.Create(filePath)
 
 	defer f.Close()
 	if err != nil {
-		log.Fatalln(err)
+		log.Fatalln("f, err := os.Create(filePath)", err)
 	}
 
 	file, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE, os.ModePerm)
@@ -31,22 +31,7 @@ func Gen() {
 	//写入文件时，使用带缓存的 *Writer
 	write := bufio.NewWriter(file)
 
-	tpl.Execute(write, "plot.gohtml")
+	tpl.ExecuteTemplate(write, "plot.gohtml", samples)
 	write.Flush()
-}
-
-func createFile(path string) {
-	// check if file exists
-	var _, err = os.Stat(path)
-
-	// create file if not exists
-	if os.IsNotExist(err) {
-		var file, err = os.Create(path)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		defer file.Close()
-	}
-
-	fmt.Println("File Created Successfully", path)
+	log.Printf("File Created Successfully %s \n", filePath)
 }
