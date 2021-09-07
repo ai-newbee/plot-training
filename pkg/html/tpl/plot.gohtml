@@ -22,7 +22,7 @@
         name: 'fitting-line',
         type: "scatter",
         mode: "lines",
-        x: [0,lineMaxX],
+        x: [0, lineMaxX],
         y: [0, 0],
         line: {color: 'red'}
     };
@@ -31,12 +31,12 @@
         name: 'lost',
         type: "scatter",
         mode: "lines",
-        x: [1.5,1.5],
+        x: [1.5, 1.5],
         y: [0, 0.5],
         line: {color: 'blue'}
     };
 
-    var data = [trace,lost,marker];
+    var data = [trace, lost, marker];
 
     Plotly.newPlot('myDiv', data, {
         xaxis: {range: [0, 3.0]},
@@ -45,8 +45,8 @@
 
     function animation() {
         Plotly.animate('myDiv', {
-            data: [trace,lost],
-            traces: [0,1],
+            data: [trace, lost],
+            traces: [0, 1],
             layout: {}
         }, {
             transition: {
@@ -59,26 +59,27 @@
         })
     }
 
-    const  interval = 1000
-    var  latch = {{.Latch}}
-    var offset= 0.1
-    count=0;
-    const records = {{.Records}}
-    console.log('latch == records.length',latch == records.length)
-    const repeat = function (){
-         console.log('latch =',latch)
-         latch--
-         //console.log(latch)
-         if (latch >0 ){
-             // trace.y = [0, trace.y[1]+ offset]
-             trace.y = [0, records[count++]["Slope"]*lineMaxX]
-             lost.y = [0,records[count]["Lost"]]
-             animation()
-             setTimeout(repeat,interval)
-         }
-     }
+    const interval = 1000
+    var latch = {{.Latch}}
+    var offset = 0.1
+    count = 0;
+    const records = {{.Records}};
+    console.log('latch == records.length', latch == records.length);
+    const repeat = function () {
+        console.log('count =', count);
+        latch--;
+        //console.log(latch)
+        if (latch > 0) {
+            // trace.y = [0, trace.y[1]+ offset]
+            trace.y = [0, records[count]["Slope"] * lineMaxX]
+            lost.y = [0, records[count]["Lost"]]
+            count++
+            animation()
+            setTimeout(repeat, interval)
+        }
+    }
 
-    setTimeout(repeat,0)
+    setTimeout(repeat, 0)
 </script>
 </body>
 </html>

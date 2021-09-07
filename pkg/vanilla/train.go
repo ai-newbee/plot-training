@@ -15,8 +15,8 @@ type LostAndW struct {
 }
 
 const (
-	Iter           = 1000
-	RecodeInterval = 20
+	Iter          = 1000
+	RecordeStripe = 10
 )
 
 // https://pkg.go.dev/gorgonia.org/tensor
@@ -98,7 +98,7 @@ func Train() []LostAndW {
 	solver := gorgonia.NewVanillaSolver(gorgonia.WithLearnRate(0.01))
 
 	var err error
-	records := make([]LostAndW, 0, Iter/RecodeInterval)
+	records := make([]LostAndW, 0, Iter/RecordeStripe)
 	for i := 0; i < Iter; i++ {
 		if err = machine.RunAll(); err != nil {
 			fmt.Printf("Error during iteration: %v: %v\n", i, err)
@@ -110,9 +110,8 @@ func Train() []LostAndW {
 			log.Fatal(err)
 		}
 
-		if (i+1)%RecodeInterval == 0 {
+		if (i+1)%RecordeStripe == 0 {
 			records = append(records, LostAndW{cost.Value().Data().(float32), theta.Value().Data().([]float32)[0]})
-
 		}
 		if (i + 1) == Iter {
 			fmt.Printf("theta: %v  Iter: %v Cost: %2.3f Accuracy: %2.2f \n",

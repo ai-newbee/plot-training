@@ -38,7 +38,7 @@ func Render(samples sample.XY, records []vanllia.LostAndW) {
 	//写入文件时，使用带缓存的 *Writer
 	write := bufio.NewWriter(file)
 
-	tpl.ExecuteTemplate(write, "plot.gohtml", VO{samples, records, vanllia.Iter / vanllia.RecodeInterval})
+	tpl.ExecuteTemplate(write, "plot.gohtml", VO{samples, records, vanllia.Iter / vanllia.RecordeStripe})
 	write.Flush()
 	log.Printf("File Created Successfully %s \n", filePath)
 }
