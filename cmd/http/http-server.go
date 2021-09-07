@@ -1,10 +1,10 @@
 package main
 
 import (
-	c "dl-base/pkg/config"
 	"fmt"
 	"log"
 	"net/http"
+	c "plot-training/pkg/config"
 )
 
 func main() {

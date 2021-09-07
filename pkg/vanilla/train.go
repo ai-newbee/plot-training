@@ -1,15 +1,23 @@
-package main
+package vanllia
 
 import (
-	"dl-base/pkg/sample"
 	"fmt"
 	"gorgonia.org/gorgonia"
 	"gorgonia.org/tensor"
 	"log"
 	"math"
+	"plot-training/pkg/sample"
 )
 
-const iter = 1000
+type LostAndW struct {
+	Lost  float32
+	Slope float32
+}
+
+const (
+	Iter           = 1000
+	RecodeInterval = 20
+)
 
 // https://pkg.go.dev/gorgonia.org/tensor
 func prepare(xy sample.XY) (x, y tensor.Tensor) {
@@ -34,7 +42,7 @@ func prepare(xy sample.XY) (x, y tensor.Tensor) {
 	return
 }
 
-func main() {
+func Train() []LostAndW {
 	xT, yT := prepare(sample.New(500))
 	log.Printf("xT :\n%v \n", xT)
 	log.Printf("yT :\n%v \n", yT)
@@ -90,7 +98,8 @@ func main() {
 	solver := gorgonia.NewVanillaSolver(gorgonia.WithLearnRate(0.01))
 
 	var err error
-	for i := 0; i < iter; i++ {
+	records := make([]LostAndW, 0, Iter/RecodeInterval)
+	for i := 0; i < Iter; i++ {
 		if err = machine.RunAll(); err != nil {
 			fmt.Printf("Error during iteration: %v: %v\n", i, err)
 			log.Fatalln(err)
@@ -100,14 +109,23 @@ func main() {
 		if err = solver.Step(model); err != nil {
 			log.Fatal(err)
 		}
-		fmt.Printf("theta: %2.2f  Iter: %v Cost: %2.3f Accuracy: %2.2f \r",
-			theta.Value(),
-			i+1,
-			cost.Value(),
-			accuracy(predicted.Data().([]float32), Y.Value().Data().([]float32)))
 
+		if (i+1)%RecodeInterval == 0 {
+			records = append(records, LostAndW{cost.Value().Data().(float32), theta.Value().Data().([]float32)[0]})
+
+		}
+		if (i + 1) == Iter {
+			fmt.Printf("theta: %v  Iter: %v Cost: %2.3f Accuracy: %2.2f \n",
+				theta.Value(),
+				i+1,
+				cost.Value(),
+				accuracy(predicted.Data().([]float32), Y.Value().Data().([]float32)))
+
+			fmt.Println(records)
+		}
 		machine.Reset() // Reset is necessary in a loop like this
 	}
+	return records
 }
 
 func accuracy(prediction, y []float32) float32 {

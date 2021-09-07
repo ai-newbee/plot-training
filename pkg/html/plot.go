@@ -2,14 +2,21 @@ package html
 
 import (
 	"bufio"
-	"dl-base/pkg/config"
-	"dl-base/pkg/sample"
 	"html/template"
 	"log"
 	"os"
+	"plot-training/pkg/config"
+	"plot-training/pkg/sample"
+	"plot-training/pkg/vanilla"
 )
 
-func Render(samples sample.XY) {
+type VO struct {
+	Samples sample.XY
+	Records []vanllia.LostAndW
+	Latch   int64
+}
+
+func Render(samples sample.XY, records []vanllia.LostAndW) {
 	pwd, err := os.Getwd()
 	log.Printf("pwd:%v", pwd)
 
@@ -31,7 +38,7 @@ func Render(samples sample.XY) {
 	//写入文件时，使用带缓存的 *Writer
 	write := bufio.NewWriter(file)
 
-	tpl.ExecuteTemplate(write, "plot.gohtml", samples)
+	tpl.ExecuteTemplate(write, "plot.gohtml", VO{samples, records, vanllia.Iter / vanllia.RecodeInterval})
 	write.Flush()
 	log.Printf("File Created Successfully %s \n", filePath)
 }

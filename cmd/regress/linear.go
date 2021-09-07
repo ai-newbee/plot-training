@@ -1,12 +1,12 @@
 package main
 
 import (
-	"dl-base/pkg/config"
 	"encoding/gob"
 	"fmt"
 	"log"
 	"math"
 	"os"
+	"plot-training/pkg/config"
 
 	"github.com/go-gota/gota/dataframe"
 	"github.com/go-gota/gota/series"

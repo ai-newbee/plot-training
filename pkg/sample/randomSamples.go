@@ -1,11 +1,11 @@
 package sample
 
 import (
-	c "dl-base/pkg/config"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"math/rand"
+	c "plot-training/pkg/config"
 )
 
 type XY struct {

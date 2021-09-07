@@ -1,4 +1,4 @@
-module dl-base
+module plot-training
 
 go 1.16
 
