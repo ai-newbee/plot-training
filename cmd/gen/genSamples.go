@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-	html.Render(sample.Random(500))
+	html.Render(sample.New(500))
 }
