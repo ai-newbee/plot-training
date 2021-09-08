@@ -14,6 +14,6 @@ import (
 func main() {
 	var m Value
 	// Float32
-	m = vanllia.Train1W(Float32, 1000)
+	m = vanllia.Train2LearnScalar(Float32, 1000)
 	fmt.Printf("float32: y = %3.3fx \n", m)
 }

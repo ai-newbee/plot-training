@@ -88,7 +88,7 @@ func linregRun(m, cost *Node, machine VM, iter int, autoCleanup bool) []LostAndW
 
 }
 
-func Train1W() []LostAndW {
+func Train2LearnScalar() []LostAndW {
 	defer runtime.GC()
 	m, cost, machine := linregSetup()
 	iter := config.IterScalar

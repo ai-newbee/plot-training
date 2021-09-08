@@ -33,7 +33,7 @@ func prepare(xy sample.XY) (x, y tensor.Tensor) {
 	return
 }
 
-func Train2W() []LostAndW {
+func Train2learnVector() []LostAndW {
 	xT, yT := prepare(sample.New(500))
 	log.Printf("xT :\n%v \n", xT)
 	log.Printf("yT :\n%v \n", yT)
