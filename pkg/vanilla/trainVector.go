@@ -6,17 +6,8 @@ import (
 	"gorgonia.org/tensor"
 	"log"
 	"math"
+	"plot-training/pkg/config"
 	"plot-training/pkg/sample"
-)
-
-type LostAndW struct {
-	Lost  float32
-	Slope float32
-}
-
-const (
-	Iter          = 1000
-	RecordeStripe = 10
 )
 
 // https://pkg.go.dev/gorgonia.org/tensor
@@ -42,7 +33,7 @@ func prepare(xy sample.XY) (x, y tensor.Tensor) {
 	return
 }
 
-func Train() []LostAndW {
+func Train2W() []LostAndW {
 	xT, yT := prepare(sample.New(500))
 	log.Printf("xT :\n%v \n", xT)
 	log.Printf("yT :\n%v \n", yT)
@@ -98,8 +89,10 @@ func Train() []LostAndW {
 	solver := gorgonia.NewVanillaSolver(gorgonia.WithLearnRate(0.01))
 
 	var err error
-	records := make([]LostAndW, 0, Iter/RecordeStripe)
-	for i := 0; i < Iter; i++ {
+	const iter = config.IterVector
+	const recordeStripe = config.RecordeStripeVector
+	records := make([]LostAndW, 0, iter/recordeStripe)
+	for i := 0; i < iter; i++ {
 		if err = machine.RunAll(); err != nil {
 			fmt.Printf("Error during iteration: %v: %v\n", i, err)
 			log.Fatalln(err)
@@ -110,11 +103,11 @@ func Train() []LostAndW {
 			log.Fatal(err)
 		}
 
-		if (i+1)%RecordeStripe == 0 {
+		if (i+1)%recordeStripe == 0 {
 			records = append(records, LostAndW{cost.Value().Data().(float32), theta.Value().Data().([]float32)[0]})
 		}
-		if (i + 1) == Iter {
-			fmt.Printf("theta: %v  Iter: %v Cost: %2.3f Accuracy: %2.2f \n",
+		if (i + 1) == iter {
+			fmt.Printf("theta: %v  iter: %v Cost: %2.3f Accuracy: %2.2f \n",
 				theta.Value(),
 				i+1,
 				cost.Value(),

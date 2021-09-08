@@ -60,16 +60,14 @@
     }
 
     const interval = 1000
-    var latch = {{.Latch}}
+
     var offset = 0.1
     count = 0;
     const records = {{.Records}};
-    console.log('latch == records.length', latch == records.length);
+    console.log('records length',records.length);
     const repeat = function () {
         console.log('count =', count);
-        latch--;
-        //console.log(latch)
-        if (latch > 0) {
+        if (count < records.length) {
             // trace.y = [0, trace.y[1]+ offset]
             trace.y = [0, records[count]["Slope"] * lineMaxX]
             lost.y = [0, records[count]["Lost"]]

@@ -13,15 +13,14 @@ import (
 type VO struct {
 	Samples sample.XY
 	Records []vanllia.LostAndW
-	Latch   int64
 }
 
-func Render(samples sample.XY, records []vanllia.LostAndW) {
+func Render(samples sample.XY, records []vanllia.LostAndW, fileName string) {
 	pwd, err := os.Getwd()
 	log.Printf("pwd:%v", pwd)
 
 	tpl := template.Must(template.ParseGlob(config.PojectRoot + "/pkg/html/tpl/*.gohtml"))
-	filePath := config.PojectRoot + "/" + config.StaticFolderName + "/plot.html"
+	filePath := config.PojectRoot + "/" + config.StaticFolderName + "/" + fileName
 	f, err := os.Create(filePath)
 
 	defer f.Close()
@@ -38,7 +37,7 @@ func Render(samples sample.XY, records []vanllia.LostAndW) {
 	//写入文件时，使用带缓存的 *Writer
 	write := bufio.NewWriter(file)
 
-	tpl.ExecuteTemplate(write, "plot.gohtml", VO{samples, records, vanllia.Iter / vanllia.RecordeStripe})
+	tpl.ExecuteTemplate(write, "plot.gohtml", VO{samples, records})
 	write.Flush()
 	log.Printf("File Created Successfully %s \n", filePath)
 }
