@@ -12,20 +12,19 @@ import (
 )
 
 // manually generate a fake dataset which is y=2x+random
-func xy() (x tensor.Tensor, y tensor.Tensor) {
+func xy(sample sample.XY) (x tensor.Tensor, y tensor.Tensor) {
 	const count = 500
-	samples := sample.New(count)
-	xBack := samples.X
-	yBack := samples.Y
+	xBack := sample.X
+	yBack := sample.Y
 
 	x = tensor.New(tensor.WithBacking(xBack), tensor.WithShape(count))
 	y = tensor.New(tensor.WithBacking(yBack), tensor.WithShape(count))
 	return
 }
 
-func linregSetup() (m, cost *Node, machine VM) {
+func linregSetup(sample sample.XY) (m, cost *Node, machine VM) {
 	var xT, yT Value
-	xT, yT = xy()
+	xT, yT = xy(sample)
 
 	g := NewGraph()
 	x := NewVector(g, Float32, WithShape(xT.Shape()[0]), WithName("x"), WithValue(xT))
@@ -58,7 +57,7 @@ func linregRun(m, cost *Node, machine VM, iter int, autoCleanup bool) []LostAndW
 		defer runtime.UnlockOSThread()
 	}
 	var err error
-	const recordeStripe = config.RecordeStripeVector
+	const recordeStripe = config.RecordeStripe4Scalar
 	records := make([]LostAndW, 0, iter/recordeStripe)
 	for i := 0; i < iter; i++ {
 		if err = machine.RunAll(); err != nil {
@@ -71,7 +70,7 @@ func linregRun(m, cost *Node, machine VM, iter int, autoCleanup bool) []LostAndW
 		}
 
 		if (i+1)%recordeStripe == 0 {
-			records = append(records, LostAndW{cost.Value().Data().(float32), m.Value().Data().(float32)})
+			records = append(records, LostAndW{cost.Value().Data().(float32), m.Value().Data().(float32), 0})
 		}
 		if (i + 1) == iter {
 			fmt.Printf("m: %v  iter: %v Cost: %2.3f  \n",
@@ -88,9 +87,9 @@ func linregRun(m, cost *Node, machine VM, iter int, autoCleanup bool) []LostAndW
 
 }
 
-func Train2LearnScalar() []LostAndW {
+func Train2LearnScalar(sample sample.XY) []LostAndW {
 	defer runtime.GC()
-	m, cost, machine := linregSetup()
+	m, cost, machine := linregSetup(sample)
 	iter := config.IterScalar
 	return linregRun(m, cost, machine, iter, true)
 }

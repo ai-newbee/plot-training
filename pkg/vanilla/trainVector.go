@@ -21,7 +21,7 @@ func prepare(xy sample.XY) (x, y tensor.Tensor) {
 			if i == 0 {
 				b = append(b, xy.X[j])
 			} else {
-				b = append(b, 0)
+				b = append(b, 1)
 			}
 		}
 	}
@@ -33,11 +33,11 @@ func prepare(xy sample.XY) (x, y tensor.Tensor) {
 	return
 }
 
-func Train2learnVector() []LostAndW {
-	xT, yT := prepare(sample.New(500))
+func Train2learnVector(xy sample.XY) []LostAndW {
+	xT, yT := prepare(xy)
 	log.Printf("xT :\n%v \n", xT)
 	log.Printf("yT :\n%v \n", yT)
-	//log.Printf("xT shape:%v \n yT shape:%v \n",xT.Shape(),yT.Shape())
+	log.Printf("xT :%v \n yT :%v \n", xT, yT)
 
 	s := yT.Shape()
 	yT.Reshape(s[0])
@@ -46,6 +46,7 @@ func Train2learnVector() []LostAndW {
 	g := gorgonia.NewGraph()
 
 	X := gorgonia.NodeFromAny(g, xT, gorgonia.WithName("x"))
+
 	Y := gorgonia.NodeFromAny(g, yT, gorgonia.WithName("y"))
 
 	log.Printf("X.Shape:%v \n Y.Shape():%v \n", X.Shape(), Y.Shape())
@@ -90,7 +91,7 @@ func Train2learnVector() []LostAndW {
 
 	var err error
 	const iter = config.IterVector
-	const recordeStripe = config.RecordeStripeVector
+	const recordeStripe = config.RecordeStripe4Vector
 	records := make([]LostAndW, 0, iter/recordeStripe)
 	for i := 0; i < iter; i++ {
 		if err = machine.RunAll(); err != nil {
@@ -104,7 +105,8 @@ func Train2learnVector() []LostAndW {
 		}
 
 		if (i+1)%recordeStripe == 0 {
-			records = append(records, LostAndW{cost.Value().Data().(float32), theta.Value().Data().([]float32)[0]})
+			data := theta.Value().Data().([]float32)
+			records = append(records, LostAndW{cost.Value().Data().(float32), data[0], data[1]})
 		}
 		if (i + 1) == iter {
 			fmt.Printf("theta: %v  iter: %v Cost: %2.3f Accuracy: %2.2f \n",

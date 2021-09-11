@@ -7,7 +7,9 @@ import (
 )
 
 func main() {
-	samples := sample.New(500)
-	html.Render(samples, vanllia.Train2LearnScalar(), "plot-learn-scalar.html")
-	html.Render(samples, vanllia.Train2learnVector(), "plot-learn-vector.html")
+	xyNoBase := sample.New(500, 0.6, 0.0)
+	html.Render(xyNoBase, vanllia.Train2LearnScalar(xyNoBase), "plot-learn-scalar.html")
+
+	xyWithBase := sample.New(500, 0.6, 0.2)
+	html.Render(xyWithBase, vanllia.Train2learnVector(xyWithBase), "plot-learn-vector.html")
 }

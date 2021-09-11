@@ -11,21 +11,29 @@ import (
 type XY struct {
 	X []float32 `json:"x"`
 	Y []float32 `json:"y"`
+	B []float32 `json:"base"`
 }
 
-func New(count int) XY {
+func New(count int, slope, base float32) XY {
 	var result = XY{}
 	result.X = make([]float32, 0, count)
 	result.Y = make([]float32, 0, count)
 
 	seed := rand.NewSource(314 * 33 * 21) //
 	r := rand.New(seed)
-	const slop = 0.6
+
 	for i := 0; i < count; i++ {
 		x := r.Float32()
 		result.X = append(result.X, x)
 
-		y := (slop + r.Float32()/5) * x
+		smallError := r.Float32() / 10
+		var y float32
+		if base == 0 {
+			y = (slope + smallError) * x
+		} else {
+			y = (slope+smallError)*x + (base + smallError)
+			result.B = append(result.B, base+smallError)
+		}
 		//y := slop * x
 		result.Y = append(result.Y, y)
 	}

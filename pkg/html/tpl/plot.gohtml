@@ -5,7 +5,7 @@
     <script src="https://cdn.bootcdn.net/ajax/libs/plotly.js/2.3.1/plotly-basic.min.js"></script>
 </head>
 <body>
-<div id="myDiv" style="height: 700px;width: 1400px"></div>
+<div id="myDiv" style="height: 500px;width: 1400px"></div>
 
 <script>
     var x = {{.Samples.X}};
@@ -18,7 +18,7 @@
         marker: {color: 'yellow'}
     }
     lineMaxX = 1.5
-    var trace = {
+    var fitting_line = {
         name: 'fitting-line',
         type: "scatter",
         mode: "lines",
@@ -36,7 +36,7 @@
         line: {color: 'blue'}
     };
 
-    var data = [trace, lost, marker];
+    var data = [fitting_line, lost, marker];
 
     Plotly.newPlot('myDiv', data, {
         xaxis: {range: [0, 3.0]},
@@ -45,7 +45,7 @@
 
     function animation() {
         Plotly.animate('myDiv', {
-            data: [trace, lost],
+            data: [fitting_line, lost],
             traces: [0, 1],
             layout: {}
         }, {
@@ -69,7 +69,8 @@
         console.log('count =', count);
         if (count < records.length) {
             // trace.y = [0, trace.y[1]+ offset]
-            trace.y = [0, records[count]["Slope"] * lineMaxX]
+            const base = records[count]["Base"]
+            fitting_line.y = [base, records[count]["Slope"] * lineMaxX + base]
             lost.y = [0, records[count]["Lost"]]
             count++
             animation()
