@@ -14,18 +14,11 @@ import (
 func prepare(xy sample.XY) (x, y tensor.Tensor) {
 	rows := len(xy.X)
 	cols := 2
-	b := make([]float32, 0, rows*cols)
-
+	x1x0 := make([]float32, 0, rows*cols)
 	for j := 0; j < rows; j++ {
-		for i := 0; i < cols; i++ {
-			if i == 0 {
-				b = append(b, xy.X[j])
-			} else {
-				b = append(b, 1)
-			}
-		}
+		x1x0 = append(x1x0, xy.X[j], 1)
 	}
-	backX := b
+	backX := x1x0
 	backY := xy.Y
 	// https://pkg.go.dev/gorgonia.org/tensor
 	x = tensor.New(tensor.WithShape(len(xy.X), cols), tensor.WithBacking(backX))
