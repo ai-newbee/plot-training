@@ -13,5 +13,6 @@ func main() {
 	xyWithBase := sample.New(500, 0.6, 0.2)
 	html.Render(xyWithBase, vanllia.Train2learnVector(xyWithBase), "plot-learn-vector.html")
 
+	sample.New3DSample(100)
 	html.Render3dClass("3d-class.html")
 }

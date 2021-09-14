@@ -42,7 +42,7 @@ func Train2learnVector(xy sample.XY) []LostAndW {
 
 	Y := gorgonia.NodeFromAny(g, yT, gorgonia.WithName("y"))
 
-	log.Printf("X.Shape:%v \n Y.Shape():%v \n", X.Shape(), Y.Shape())
+	log.Printf("X.Shape:%v \n Z.Shape():%v \n", X.Shape(), Y.Shape())
 	//gorgonia.Gaussian(0, 0) means no any random chance , but gorgonia.Zeroes() is better
 	theta := gorgonia.NewVector(
 		g,
