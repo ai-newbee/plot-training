@@ -12,7 +12,7 @@ import (
 
 type VO struct {
 	Samples sample.XY
-	Records []vanllia.LostAndW
+	Records []vanilla.LostAndW
 }
 
 func Render3dClass(fileName string, csvFileRelativePath string) {
@@ -48,7 +48,7 @@ func getAbsolutePathOfTargetFile(targFileName string) (filePath string) {
 	return filePath
 }
 
-func Render(samples sample.XY, records []vanllia.LostAndW, fileName string) {
+func Render(samples sample.XY, records []vanilla.LostAndW, fileName string) {
 	pwd, err := os.Getwd()
 	log.Printf("pwd:%v", pwd)
 

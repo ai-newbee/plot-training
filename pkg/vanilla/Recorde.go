@@ -1,4 +1,4 @@
-package vanllia
+package vanilla
 
 type LostAndW struct {
 	Lost  float32

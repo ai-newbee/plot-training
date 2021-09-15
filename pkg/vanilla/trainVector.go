@@ -1,4 +1,4 @@
-package vanllia
+package vanilla
 
 import (
 	"fmt"
