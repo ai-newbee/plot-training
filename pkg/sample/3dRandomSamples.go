@@ -11,14 +11,14 @@ import (
 	c "plot-training/pkg/config"
 )
 
-type XXY struct {
+type XYZ struct {
 	X []float32 `json:"x"`
 	Y []float32 `json:"y"`
 	Z []float32 `json:"z"`
 }
 
-func New3DSample(count int, csvFileName string) (result XXY) {
-	result = XXY{}
+func New3DSample(count int, csvFileName string) (result XYZ) {
+	result = XYZ{}
 	result.X = make([]float32, 0, count)
 	result.Y = make([]float32, 0, count)
 	result.Z = make([]float32, 0, count)
@@ -45,7 +45,7 @@ func New3DSample(count int, csvFileName string) (result XXY) {
 	return result
 }
 
-func saveAsCSV(samples XXY, csvFileName string) {
+func saveAsCSV(samples XYZ, csvFileName string) {
 	absFilePath := c.DatasetDir + csvFileName
 	os.Create(absFilePath) //clean the content of csv file
 	f, err := os.OpenFile(absFilePath, os.O_RDWR, 0666)

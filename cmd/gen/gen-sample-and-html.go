@@ -15,6 +15,9 @@ func main() {
 	html.Render(xyWithBase, vanilla.Train2learnVector(xyWithBase), "plot-learn-vector.html")
 
 	csvFileName := "3d-scatter-gen.csv"
-	sample.New3DSample(20, csvFileName)
+	xyz := sample.New3DSample(200, csvFileName)
+
+	vanilla.TrainDeepNetwork(xyz)
+
 	html.Render3dClass("3d-class.html", config.DatasetDirName+"/"+csvFileName)
 }
