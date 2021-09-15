@@ -32,10 +32,6 @@ func Train2learnVector(xy sample.XY) []LostAndW {
 	log.Printf("yT :\n%v \n", yT)
 	log.Printf("xT :%v \n yT :%v \n", xT, yT)
 
-	s := yT.Shape()
-	yT.Reshape(s[0])
-
-	//log.Printf("reshape yT shape:%v \n", yT.Shape())
 	g := gorgonia.NewGraph()
 
 	X := gorgonia.NodeFromAny(g, xT, gorgonia.WithName("x"))

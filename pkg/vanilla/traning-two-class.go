@@ -32,21 +32,12 @@ func TrainDeepNetwork(xyz sample.XYZ) string {
 			panic(err)
 		}
 
-		//if (i+1)%recordeStripe == 0 {
-		//	records = append(records, LostAndW{cost.Value().Data().(float32), m.Value().Data().(float32), 0})
-		//}
-		//if (i + 1) == iter {
-		//	fmt.Printf("m: %v  iter: %v Cost: %2.3f  \n",
-		//		m.Value(),
-		//		i+1,
-		//		cost.Value())
-		//
-		//	fmt.Println(records)
-		//}
-		fmt.Printf("cost: %f \n", cost.Value().Data().(float32))
+		fmt.Printf("cost: %2.3f \r", cost.Value().Data().(float32))
 
 		machine.Reset() // Reset is necessary in a loop like this
 	}
+
+	fmt.Printf("cost: %2.3f \n", cost.Value().Data().(float32))
 	return "ok"
 }
 
@@ -60,8 +51,8 @@ func prepareSample(graph *g.ExprGraph, xyz sample.XYZ) (xy1, z *g.Node) { //z is
 	xy1Tensor := t.New(t.WithShape(sampleCount, 3), t.WithBacking(back))
 	zTensor := t.New(t.WithShape(sampleCount), t.WithBacking(xyz.Z))
 
-	s := zTensor.Shape()
-	zTensor.Reshape(s[0])
+	//s := zTensor.Shape()
+	//zTensor.Reshape(s[0])
 
 	xy1 = g.NodeFromAny(graph, xy1Tensor, g.WithName("xy1"))
 
@@ -83,8 +74,7 @@ func setupGraph(graph *g.ExprGraph, xy1, z *g.Node) (predict, cost, mat, vec *g.
 		g.WithName("vec"),
 		g.WithShape(3), // x,y,1 dim is 3
 		g.WithInit(g.Ones()))
-	hidden := g.Must(g.Sigmoid(g.Must(g.Mul(xy1, mat))))
-	predict = g.Must(g.Mul(hidden, vec))
+	predict = buildPredict(xy1, mat, vec)
 
 	squaredError := must(g.Square(must(g.Sub(predict, z))))
 
@@ -96,4 +86,15 @@ func setupGraph(graph *g.ExprGraph, xy1, z *g.Node) (predict, cost, mat, vec *g.
 	}
 	machine = g.NewTapeMachine(graph, g.BindDualValues(mat, vec))
 	return
+}
+
+func buildPredict(xy1 *g.Node, mat *g.Node, vec *g.Node) (predict *g.Node) {
+	hidden := g.Must(g.Sigmoid(g.Must(g.Mul(xy1, mat))))
+	predict = g.Must(g.Mul(hidden, vec))
+	return
+}
+
+func buildLogs(mat *g.Node, vec *g.Node, minX, maxX, minY, maxY float32) {
+	//graph := g.NewGraph()
+
 }

@@ -10,7 +10,7 @@ func init() {
 }
 func TestTrainDeepNetwork(t *testing.T) {
 	csvFileName := "3d-scatter-gen.csv"
-	xyz := sample.New3DSample(200, csvFileName)
+	xyz := sample.New3DSample(2000, csvFileName)
 
 	ret := TrainDeepNetwork(xyz)
 	if "ok" != ret {
