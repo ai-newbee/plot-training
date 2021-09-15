@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!-- Load plotly.js into the DOM -->
+    
     <script src='https://cdn.plot.ly/plotly-2.4.2.min.js'></script>
     <script src='https://cdn.bootcdn.net/ajax/libs/d3/3.5.17/d3.js'></script>
 </head>
 
 <body>
-    <div id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
+    <div id='myDiv'></div>
 </body>
 
 <script>
-    d3.csv({{.}}, function(err, rows){
+    d3.csv("dataset/3d-scatter-gen.csv", function(err, rows){
         rowClass1= rows.filter(row=> row['z']==0 )
         rowClass2= rows.filter(row=> row['z']==1 )
 

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"plot-training/pkg/config"
 	"plot-training/pkg/html"
 	"plot-training/pkg/sample"
 	vanllia "plot-training/pkg/vanilla"
@@ -13,6 +14,7 @@ func main() {
 	xyWithBase := sample.New(500, 0.6, 0.2)
 	html.Render(xyWithBase, vanllia.Train2learnVector(xyWithBase), "plot-learn-vector.html")
 
-	sample.New3DSample(100)
-	html.Render3dClass("3d-class.html")
+	csvFileName := "3d-scatter-gen.csv"
+	sample.New3DSample(20, csvFileName)
+	html.Render3dClass("3d-class.html", config.DatasetDirName+"/"+csvFileName)
 }

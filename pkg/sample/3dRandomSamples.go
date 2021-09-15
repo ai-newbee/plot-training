@@ -17,8 +17,8 @@ type XXY struct {
 	Z []float32 `json:"z"`
 }
 
-func New3DSample(count int) XXY {
-	var result = XXY{}
+func New3DSample(count int, csvFileName string) (result XXY) {
+	result = XXY{}
 	result.X = make([]float32, 0, count)
 	result.Y = make([]float32, 0, count)
 	result.Z = make([]float32, 0, count)
@@ -41,12 +41,14 @@ func New3DSample(count int) XXY {
 		}
 		result.Z = append(result.Z, z)
 	}
-	saveAsCSV(result)
+	saveAsCSV(result, csvFileName)
 	return result
 }
 
-func saveAsCSV(samples XXY) {
-	f, err := os.OpenFile(c.CSV3dFile, os.O_RDWR, 0666)
+func saveAsCSV(samples XXY, csvFileName string) {
+	absFilePath := c.DatasetDir + csvFileName
+	os.Create(absFilePath) //clean the content of csv file
+	f, err := os.OpenFile(absFilePath, os.O_RDWR, 0666)
 	if err != nil {
 		fmt.Println("Error: ", err)
 		return
@@ -60,14 +62,12 @@ func saveAsCSV(samples XXY) {
 		writer.Write(data)
 	}
 
-	// 将缓存中的内容写入到文件里
 	writer.Flush()
-
 	if err = writer.Error(); err != nil {
 		fmt.Println(err)
 	}
 
-	fmt.Printf("filePath name is %s \n", c.CSV3dFile)
+	fmt.Printf("filePath name is %s \n", absFilePath)
 }
 
 func f2s(fv float32) string {

@@ -6,8 +6,8 @@ const (
 	StaticFolderName = "docs"
 	AssetFolderName  = StaticFolderName + "/assets"
 
-	csv3dFileName = "3d-scatter-gen.csv"
-	CSV3dFile     = PojectRoot + "/" + StaticFolderName + "/dataset/" + csv3dFileName // /home/u/docs/dataset/3d-scatter-gen.csv
+	DatasetDirName = "dataset"
+	DatasetDir     = PojectRoot + "/" + StaticFolderName + "/" + DatasetDirName + "/" // /home/u/docs/dataset/3d-scatter-gen.csv
 
 	JsonFilename   = "samples.json"
 	SampleFilePath = PojectRoot + "/" + StaticFolderName + "/dataset/" + JsonFilename // /home/u/docs/samples.json
